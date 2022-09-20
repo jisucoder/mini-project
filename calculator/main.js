@@ -1,8 +1,8 @@
-let left = null, right = null, oper = null, res = false;
+let left = null, right = null, oper = null, res = false, resValue = null;
 
-function save(){
-    const inp =document.getElementById("top-inp");
-    let value = "";
+function save() {
+    const inp = document.getElementById("top-inp");
+    let value = ""
 
     if(left === null)
         return;
@@ -19,46 +19,81 @@ function save(){
     value += right + " "
     inp.value = value
 
-    if(res){
-        let res = "";
+    if(res) {
         switch(oper){
             case "+":
-                res = parseInt(left) + parseInt(right)
+                resValue = parseInt(left) + parseInt(right)
                 break;
             case "-":
-                res = parseInt(left) - parseInt(right)
+                resValue = parseInt(left) - parseInt(right)
                 break;
             case "*":
-                res = parseInt(left) * parseInt(right)
+                resValue = parseInt(left) * parseInt(right)
+                break;
             case "/":
-                res = parseInt(left) / parseInt(right)
+                resValue = parseInt(left) / parseInt(right)
+                break;
         }
-
-        value +="="+res;
+        value += "=" + resValue;
         inp.value = value
     }
 }
 
 function inputNum(num) {
     if(oper === null){
-        if(left === null){
+        if(left === null) {
             left = `${num}`
         }
-        else{
-            if(num ===0 && parseInt(left) === 0)
+        else {
+            if(num === 0 && parseInt(left) === 0)
                 return;
-            left +=`${num}`
+            left += `${num}`
         }
     }
-    else{
-        if(right === null){
+    else {
+        if(right === null) {
             right = `${num}`
-        } 
-        else{
-            if(num ===0 && parseInt(left) === 0)
+        }
+        else {
+            if(num === 0 && parseInt(right) === 0)
                 return;
-            right +=`${num}`
+            right += `${num}`
         }
     }
-    save();
+    save()
+}
+
+function inputOper(op) {
+    if(left === null && op === "-"){
+        left = "-"
+        save()
+        return;
+    }
+    if(left === "-" && op === "-"){
+        return;
+    }
+    if(op === "-" && oper != null && right === null){
+        right = "-"
+        save()
+        return;
+    }
+    oper = op
+    save()
+}
+
+function inputEqu(){
+    if(left === null || right === null || !oper)
+        return;
+    
+    if(res){
+        left = resValue
+        right = null
+        resValue = null
+        oper = null
+        res = false
+    }
+    else {
+        res = true
+    }
+    save()
 }
